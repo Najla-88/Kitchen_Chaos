@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/MainMenuScene.unity
+    guid: 3c0a072cfe869b84ea490d8b373f2aa4
+  - enabled: 1
+    path: Assets/Scenes/GameScene.unity
+    guid: ed50dfc4317b386438f81e006636e5c2
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 047f1cb0a9778414a8d5dc430cdb5f1d
+  - enabled: 1
+    path: Assets/Scenes/StoreScene.unity
+    guid: 34d471904735bec4a9bb5384f55d678b
+  - enabled: 0
+    path: Assets/Scenes/SettingScene.unity
+    guid: 33e9f24e09a184247aa7c9003adab291
+  - enabled: 1
+    path: Assets/Scenes/LevelsMenuScene.unity
+    guid: 40cd0c72481fd594482850df530737a1
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level1Scene.unity
+    guid: e1085d71bebf7974b93588b438b6df79
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level2Scene.unity
+    guid: 5209ab6af04b61940be37b218e84e69b
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level3Scene.unity
+    guid: 1b452b6e9f6cfe14db4e86ffb2379e9a
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 98fefa77cb515364fa56d7730da9eda3,
+      type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: f4bce130f279b364288c75d5c137314e,
+      type: 2}

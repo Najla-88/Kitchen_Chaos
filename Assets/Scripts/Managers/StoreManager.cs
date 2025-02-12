@@ -1,0 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class StoreManager : MonoBehaviour
+{
+    //[SerializeField] private SaveManager saveManager;
+    //private void Start()
+    //{
+    //    saveManager.Load();
+    //}
+}
