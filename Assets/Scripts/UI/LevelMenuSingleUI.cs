@@ -24,6 +24,8 @@ public class LevelMenuSingleUI : MonoBehaviour
     }
     public void SetItemData(LevelInfoSO levelInfoSO)
     {
+        Debug.Log(levelInfoSO.name);
+
         this.levelInfoSO = levelInfoSO;
         levelNumber.text = levelInfoSO.levelNumber.ToString();
         if(!levelInfoSO.levelUnlocked)

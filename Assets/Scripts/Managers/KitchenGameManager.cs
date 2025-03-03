@@ -32,6 +32,7 @@ public class KitchenGameManager : MonoBehaviour
     {
         Instance = this;
         state = State.WaitingToStart;
+
     }
 
     private void Start()
@@ -40,6 +41,8 @@ public class KitchenGameManager : MonoBehaviour
         {
             GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
         }
+        SaveManager.Instance.Load();
+
     }
 
     private void GameInput_OnPauseAction(object sender, EventArgs e)

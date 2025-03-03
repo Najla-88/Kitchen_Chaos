@@ -25,7 +25,7 @@ public class CountersManager : MonoBehaviour
     [SerializeField] private GameObject[] tomatoContainerCounters;
     [SerializeField] private GameObject[] cheeseBlockContainerCounters;
 
-    [SerializeField] private CounterUnlockerManager counterUnlockerManager;
+    //[SerializeField] private CounterUnlockerManager counterUnlockerManager;
 
 
     private int clearCounterLastIndex;
@@ -39,15 +39,15 @@ public class CountersManager : MonoBehaviour
 
     private void Start()
     {
-        clearCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.Clear);
-        stoveCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.Stove);
-        cuttingCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.Cutting);
-        meatContainerCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.MeatContainer);
-        breadContainerCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.BreadContainer);
-        cabbageContainerCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.CabbageContainer);
-        tomatoContainerCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.TomatoContainer);
-        cheeseBlockContainerCounterLastIndex = counterUnlockerManager.GetLastIndexOfCounterType(CounterType.CheeseBlockContainer);
-        
+        clearCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.Clear);
+        stoveCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.Stove);
+        cuttingCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.Cutting);
+        meatContainerCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.MeatContainer);
+        breadContainerCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.BreadContainer);
+        cabbageContainerCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.CabbageContainer);
+        tomatoContainerCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.TomatoContainer);
+        cheeseBlockContainerCounterLastIndex = SaveManager.Instance.GetLastIndexOfCounterType(CounterType.CheeseBlockContainer);
+
         for(int i = 0; i < clearCounterLastIndex; i++)
         {
             //if (PlayerPrefs.GetInt(CounterUnlockType.Clear.ToString() + i.ToString()) == 1)

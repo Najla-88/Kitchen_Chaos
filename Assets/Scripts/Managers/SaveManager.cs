@@ -1,210 +1,191 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-    // we need these to update them
-    [SerializeField] private CounterItemsDataListSO counterItemsDataListSO;
+    public static SaveManager Instance { get; private set; }
+
     [SerializeField] private PlayerMaterialDataListSO playerMaterialDataListSO;
-
-    private void Awake()
-    {
-        Load();
-    }
-
-    private void Start()
-    {
-        if (playerMaterialDataListSO.playerMaterialDataSOArray.Length > 0)
-        {
-            foreach (PlayerMaterialDataSO playerMaterialDataSO in playerMaterialDataListSO.playerMaterialDataSOArray)
-            {
-                playerMaterialDataSO.OnUsed += PlayerMaterialDataSO_OnUsed;
-                playerMaterialDataSO.OnSold += PlayerMaterialDataSO_OnSold;
-            }
-        }
-    }
-
-    private void PlayerMaterialDataSO_OnSold(object sender, EventArgs e)
-    {
-        Save();
-    }
-
-    private void PlayerMaterialDataSO_OnUsed(object sender, EventArgs e)
-    {
-        Save();
-    }
-    private void OnDestroy()
-    {
-        if (playerMaterialDataListSO != null && playerMaterialDataListSO.playerMaterialDataSOArray != null)
-        {
-            foreach (PlayerMaterialDataSO playerMaterialDataSO in playerMaterialDataListSO.playerMaterialDataSOArray)
-            {
-                playerMaterialDataSO.OnUsed -= PlayerMaterialDataSO_OnUsed;
-                playerMaterialDataSO.OnSold -= PlayerMaterialDataSO_OnSold;
-            }
-        }
-    }
+    [SerializeField] private CounterItemsDataListSO counterItemsDataListSO;
 
     private const string STORE_PREFS = "StorePrefs";
 
+    private List<CountersSaveObject> countersSaveObjectList = new List<CountersSaveObject>();
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     [Serializable]
-    public class CountersSaveObject
+    private class PlayerCustomSaveObject
+    {
+        public int usedIndex;
+        public List<int> soldIndex = new List<int>();
+    }
+
+    [Serializable]
+    private class CountersSaveObject
     {
         public CountersManager.CounterType counterType;
         public int lastIndex;
     }
 
     [Serializable]
-    public class PlayerCustomSaveObject
+    private class SaveObject
     {
-        public int usedIndex;
-        public List<int> soldIndex;
-
-        // Constructor to initialize the soldIndex list
-        public PlayerCustomSaveObject()
-        {
-            soldIndex = new List<int>();
-        }
-    }
-
-    public class SaveObject
-    {
-        public List<CountersSaveObject> countersSaveObjectList;
         public PlayerCustomSaveObject playerCustomSaveObject;
+        public List<CountersSaveObject> countersSaveObjectList;
     }
 
     public void Save()
     {
-        List<CountersSaveObject> countersSaveObjectList = new List<CountersSaveObject>();
-
-
-        CounterItemsDataSO[] counterItemsDataSOArrray = counterItemsDataListSO.counterItemsDataSOArray;
-
-        for(int i = 0; i < counterItemsDataSOArrray.Length; i++)
+        SaveObject saveObject = new SaveObject
         {
-            CountersSaveObject countersSaveObject = new CountersSaveObject();
-            countersSaveObject.counterType = counterItemsDataSOArrray[i].counterType;
-            countersSaveObject.lastIndex = counterItemsDataSOArrray[i].lastIndex;
+            playerCustomSaveObject = new PlayerCustomSaveObject(),
+            countersSaveObjectList = new List<CountersSaveObject>(),
+        };
 
-            countersSaveObjectList.Add(countersSaveObject);
-        }
-
-        PlayerCustomSaveObject playerCustomSaveObject = new PlayerCustomSaveObject();
-        
-        PlayerMaterialDataSO[] playerMaterialDataListSOArray = playerMaterialDataListSO.playerMaterialDataSOArray;
-
-        for (int i =0; i< playerMaterialDataListSOArray.Length; i++)
+        // Save player material data
+        for (int i = 0; i < playerMaterialDataListSO.playerMaterialDataSOArray.Length; i++)
         {
-            if (playerMaterialDataListSOArray[i].isSold)
+            if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isSold)
             {
-                playerCustomSaveObject.soldIndex.Add(i);
-                if (playerMaterialDataListSOArray[i].isUsed)
+                saveObject.playerCustomSaveObject.soldIndex.Add(i);
+                if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed)
                 {
-                    playerCustomSaveObject.usedIndex = i;
+                    saveObject.playerCustomSaveObject.usedIndex = i;
                 }
             }
         }
 
-        SaveObject saveObject = new SaveObject
+        // Save counter data
+        foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
         {
-            countersSaveObjectList = countersSaveObjectList,
-            playerCustomSaveObject = playerCustomSaveObject,
-        };
+            saveObject.countersSaveObjectList.Add(new CountersSaveObject
+            {
+                counterType = counterData.counterType,
+                lastIndex = counterData.lastIndex
+            });
+        }
 
         string json = JsonUtility.ToJson(saveObject);
-
         PlayerPrefs.SetString(STORE_PREFS, json);
     }
 
     public void Load()
     {
-        string json = PlayerPrefs.GetString(STORE_PREFS);
-        if (string.IsNullOrEmpty(json))
+        if (PlayerPrefs.HasKey(STORE_PREFS))
         {
-            InitializeDefaultValues();
+            string json = PlayerPrefs.GetString(STORE_PREFS);
+            if(json != null)
+            {
+
+                SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
+
+                // Load player material data
+                foreach (int soldIndex in saveObject.playerCustomSaveObject.soldIndex)
+                {
+                    playerMaterialDataListSO.playerMaterialDataSOArray[soldIndex].isSold = true;
+                }
+
+                for(int i = 0; i< playerMaterialDataListSO.playerMaterialDataSOArray.Length; i++)
+                {
+                    if (i == saveObject.playerCustomSaveObject.usedIndex)
+                    {
+                        playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed = true;
+                    }
+                    else
+                    {
+                        playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed = false;
+
+                    }
+                }
+
+
+                // Load counter data
+                countersSaveObjectList = saveObject.countersSaveObjectList;
+                foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
+                {
+                    foreach (var counterSaveObject in saveObject.countersSaveObjectList)
+                    {
+                        if (counterData.counterType == counterSaveObject.counterType)
+                        {
+                            counterData.lastIndex = counterSaveObject.lastIndex;
+                        }
+                    }
+                }
+
+            }
         }
         else
         {
-            // Load saved data
-            SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
-            if (saveObject != null)
-            {
-                LoadPlayerCustom(saveObject);
-            }
+            InitializeDefaultValues();
         }
     }
 
-    private void LoadPlayerCustom(SaveObject saveObject)
-    {
-        PlayerCustomSaveObject playerCustomSaveObject = saveObject.playerCustomSaveObject;
-
-        PlayerMaterialDataSO[] playerMaterialDataListSOArray = playerMaterialDataListSO.playerMaterialDataSOArray;
-        foreach (int soldIndex in playerCustomSaveObject.soldIndex)
-        {
-            playerMaterialDataListSOArray[soldIndex].isSold = true;
-        }
-        playerMaterialDataListSOArray[playerCustomSaveObject.usedIndex].isUsed = true;
-    }
-    private void LoadCounters(SaveObject saveObject)
-    {
-        List<CountersSaveObject> countersSaveObjectList = saveObject.countersSaveObjectList;
-
-        CounterItemsDataSO[] counterItemsDataSOArrray = counterItemsDataListSO.counterItemsDataSOArray;
-        foreach (CountersSaveObject countersSaveObject in countersSaveObjectList)
-        {
-            foreach(CounterItemsDataSO counterItemsDataSO in counterItemsDataSOArrray)
-            {
-                if(counterItemsDataSO.counterType == countersSaveObject.counterType)
-                {
-                    counterItemsDataSO.lastIndex = countersSaveObject.lastIndex;
-                }
-            }
-        }
-    }
     private void InitializeDefaultValues()
     {
-        // Set default values for playerMaterialDataListSO
-        PlayerMaterialDataSO[] playerMaterialDataListSOArray = playerMaterialDataListSO.playerMaterialDataSOArray;
-        for (int i = 0; i < playerMaterialDataListSOArray.Length; i++)
+        // Initialize default values for ScriptableObjects
+
+        // Player material data
+        // make sure all material is unused and unsold
+        foreach (var playerMaterialData in playerMaterialDataListSO.playerMaterialDataSOArray)
         {
-            playerMaterialDataListSOArray[i].isSold = false;
-            playerMaterialDataListSOArray[i].isUsed = false;
+            playerMaterialData.isSold = false;
+            playerMaterialData.isUsed = false;
+        }
+        // set the first item as a default material
+        if (playerMaterialDataListSO.playerMaterialDataSOArray.Length > 0)
+        {
+            playerMaterialDataListSO.playerMaterialDataSOArray[0].isSold = true;
+            playerMaterialDataListSO.playerMaterialDataSOArray[0].isUsed = true;
         }
 
-        if (playerMaterialDataListSOArray.Length > 0)
-        {
-            playerMaterialDataListSOArray[0].isSold = true;
-            playerMaterialDataListSOArray[0].isUsed = true;
-        }
 
-        CounterItemsDataSO[] counterItemsDataListSOArray = counterItemsDataListSO.counterItemsDataSOArray;
-
-        for(int i = 0; i < counterItemsDataListSOArray.Length; i++)
+        // Counters
+        foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
         {
-            Debug.Log("hi");
-            Debug.Log(counterItemsDataListSOArray[0].counterType.ToString());
-            if (counterItemsDataListSOArray[0].counterType.ToString() == "Clear")
+            if (counterData.counterType == CountersManager.CounterType.Clear)
             {
-                counterItemsDataListSOArray[0].lastIndex = 1;
+                counterData.lastIndex = 1;
             }
-            else if (counterItemsDataListSOArray[0].counterType.ToString() == "Bread")
+            else if (counterData.counterType == CountersManager.CounterType.BreadContainer)
             {
-                counterItemsDataListSOArray[0].lastIndex = 1;
+                counterData.lastIndex = 1;
             }
-            else if (counterItemsDataListSOArray[0].counterType.ToString() == "Meat")
+            else if (counterData.counterType == CountersManager.CounterType.MeatContainer)
             {
-                counterItemsDataListSOArray[0].lastIndex = 1;
+                counterData.lastIndex = 1;
             }
-            else if (counterItemsDataListSOArray[0].counterType.ToString() == "Stove")
+            else if (counterData.counterType == CountersManager.CounterType.Stove)
             {
-                counterItemsDataListSOArray[0].lastIndex = 1;
+                counterData.lastIndex = 1;
+            }
+            else
+            {
+                counterData.lastIndex = 0;
             }
         }
-
         Save();
+
+    }
+
+
+    public int GetLastIndexOfCounterType(CountersManager.CounterType counterType)
+    {
+        foreach (CountersSaveObject countersSaveObject in countersSaveObjectList)
+        {
+            if(countersSaveObject.counterType == counterType)
+            {
+                return countersSaveObject.lastIndex;
+            }
+        }
+        return -1;
+
     }
 }
-
-

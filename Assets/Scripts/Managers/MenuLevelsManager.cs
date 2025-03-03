@@ -6,10 +6,9 @@ using UnityEngine;
 public class MenuLevelsManager : MonoBehaviour
 {
     [SerializeField] private LevelInfoListSO levelInfoListSO;
-    [SerializeField] private CounterUnlockerManager counterUnlockerManager;
+    //[SerializeField] private CounterUnlockerManager counterUnlockerManager;
 
     public static event EventHandler OnLevelsInfoUpdated;
-
 
     public static void ResetStaticData()
     {
@@ -17,6 +16,8 @@ public class MenuLevelsManager : MonoBehaviour
     }
     private void Start()
     {
+
+        SaveManager.Instance.Load();
         //LevelInfoManager.Instance.SetUnlockedPrefs(levelInfoListSO.levelInfoSOArray[0].scene.ToString(), 0);
         //StarsManager.Instance.SetLevlelStarsPrefs(levelInfoListSO.levelInfoSOArray[0].scene.ToString(), -1);
         //LevelInfoManager.Instance.SetUnlockedPrefs(levelInfoListSO.levelInfoSOArray[1].scene.ToString(), 0);
@@ -55,8 +56,11 @@ public class MenuLevelsManager : MonoBehaviour
                     for (int j = 0; j < currentLevel.conditionCounterUnlockType.Length; j++)
                     {
                         int numberOfUnlockedCounters = currentLevel.conditionCounterUnlockType[j].numberOfUnlockedCounters;
-                        int lastIndexOfCounterType = counterUnlockerManager.GetLastIndexOfCounterType(currentLevel.conditionCounterUnlockType[j].counterUnlockType);
+                        int lastIndexOfCounterType = SaveManager.Instance.GetLastIndexOfCounterType(currentLevel.conditionCounterUnlockType[j].counterUnlockType);
 
+                        //Debug.Log("numberOfUnlockedCounters = "+ numberOfUnlockedCounters);
+                        //Debug.Log("lastIndexOfCounterType = " + lastIndexOfCounterType);
+                        //Debug.Log("counterUnlockType = " + currentLevel.conditionCounterUnlockType[j].counterUnlockType);
                         if (lastIndexOfCounterType >= numberOfUnlockedCounters)
                         {
                             if (j == currentLevel.conditionCounterUnlockType.Length - 1)

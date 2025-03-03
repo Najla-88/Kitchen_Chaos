@@ -63,36 +63,4 @@ public class StoreItemSingleUI : MonoBehaviour
             useButton.gameObject.SetActive(true);
         }
     }
-
-    public int GetItemIndex()
-    {
-        return index;
-    }
-
-    public void SetButtonSelected()
-    {
-        itemIconButton.Select();
-    }
-
-    public bool IsItemSold()
-    {
-        return playerMaterialDataSO.isSold;
-    }
-
-    public void BuyItem()
-    {
-
-        int playerCoins = CoinsManager.Instance.GetPlayerCoins();
-        int itemCost = playerMaterialDataSO.cost;
-        if (playerCoins >= itemCost)
-        {
-            CoinsManager.Instance.DeductPlayerCoins(itemCost);
-            playerMaterialDataSO.isSold = true;
-        }    
-    }
-    //// Add a method to set the index
-    //public void SetIndex(int index)
-    //{
-    //    indexText.text = index.ToString();
-    //}
 }

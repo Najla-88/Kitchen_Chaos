@@ -20,7 +20,7 @@ MonoBehaviour:
   levelNumber: 3
   starsCount: -1
   levelUnlocked: 0
-  scene: 8
+  scene: 7
   conditionCounterUnlockType:
   - counterUnlockType: 0
     numberOfUnlockedCounters: 1

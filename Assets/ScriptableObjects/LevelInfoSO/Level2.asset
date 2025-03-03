@@ -18,7 +18,7 @@ MonoBehaviour:
   recipeListSOInLevel: {fileID: 11400000, guid: 6fe67b78a5bfb434fb957e9eae3026cc,
     type: 2}
   levelNumber: 2
-  starsCount: 0
+  starsCount: -1
   levelUnlocked: 1
-  scene: 7
+  scene: 6
   conditionCounterUnlockType: []

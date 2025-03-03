@@ -16,5 +16,5 @@ MonoBehaviour:
   counterType: 0
   sprite: {fileID: 21300000, guid: 256b17f65ca4560449866be321c6b6b2, type: 3}
   cost: 1
-  lastIndex: 7
+  lastIndex: 1
   maxCount: 12

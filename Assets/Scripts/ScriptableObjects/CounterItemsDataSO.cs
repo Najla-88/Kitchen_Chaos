@@ -14,8 +14,15 @@ public class CounterItemsDataSO : ScriptableObject
     public int lastIndex;
     public int maxCount;
 
-    public void UpdateLastIndex()
+    public void IncreaseLastIndex()
     {
-        lastIndex = PlayerPrefs.GetInt("Last" + counterType.ToString());
+        lastIndex +=1 ;
+    }
+    public void DecreaseLastIndex()
+    {
+        if (lastIndex >0)
+        {
+            lastIndex -=1 ;
+        }
     }
 }

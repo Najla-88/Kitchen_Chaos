@@ -20,7 +20,7 @@ public class LevelsMenuUI : MonoBehaviour
             Loader.Load(Loader.Scene.MainMenuScene);
         });
         MenuLevelsManager.OnLevelsInfoUpdated += MenuLevelsManager_OnLevelsInfoUpdated;
-        UpdateVisual();
+        //UpdateVisual();
     }
 
     private void MenuLevelsManager_OnLevelsInfoUpdated(object sender, System.EventArgs e)
@@ -48,7 +48,6 @@ public class LevelsMenuUI : MonoBehaviour
             {
                 levelTransform.GetComponent<Button>().enabled = false;
             }
-
             levelTransform.GetComponent<LevelMenuSingleUI>().SetItemData(levelInfoListSO.levelInfoSOArray[i]);
         }
     }
