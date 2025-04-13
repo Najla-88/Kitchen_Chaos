@@ -19,14 +19,14 @@ public class LevelsMenuUI : MonoBehaviour
         {
             Loader.Load(Loader.Scene.MainMenuScene);
         });
-        MenuLevelsManager.OnLevelsInfoUpdated += MenuLevelsManager_OnLevelsInfoUpdated;
-        //UpdateVisual();
-    }
-
-    private void MenuLevelsManager_OnLevelsInfoUpdated(object sender, System.EventArgs e)
-    {
+        //MenuLevelsManager.OnLevelsInfoUpdated += MenuLevelsManager_OnLevelsInfoUpdated;
         UpdateVisual();
     }
+
+    //private void MenuLevelsManager_OnLevelsInfoUpdated(object sender, System.EventArgs e)
+    //{
+    //    UpdateVisual();
+    //}
 
     private void UpdateVisual()
     {
@@ -44,7 +44,7 @@ public class LevelsMenuUI : MonoBehaviour
             Transform levelTransform = Instantiate(levelTemplate, levelsContainer);
 
             levelTransform.gameObject.SetActive(true);
-            if(levelInfoListSO.levelInfoSOArray[i].levelUnlocked == false)
+            if(levelInfoListSO.levelInfoSOArray[i].isUnlocked == false)
             {
                 levelTransform.GetComponent<Button>().enabled = false;
             }

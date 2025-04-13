@@ -41,8 +41,6 @@ public class KitchenGameManager : MonoBehaviour
         {
             GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
         }
-        SaveManager.Instance.Load();
-
     }
 
     private void GameInput_OnPauseAction(object sender, EventArgs e)

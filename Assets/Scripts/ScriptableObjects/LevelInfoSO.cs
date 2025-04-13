@@ -16,10 +16,18 @@ public class LevelInfoSO : ScriptableObject
 
     public int levelNumber;
     public int starsCount=-1;
-    public bool levelUnlocked;
+    public bool isUnlocked;
     public Loader.Scene scene;
 
     public ConditionCounterUnlockType[] conditionCounterUnlockType;
+
+    public event EventHandler OnStarsUpdated;
+
+    public void UpdateStars(int starsCount)
+    {
+        this.starsCount = starsCount;
+        OnStarsUpdated?.Invoke(this, new EventArgs());
+    }
 }
 
 [Serializable]

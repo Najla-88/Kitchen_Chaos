@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ef7fc9ca186b7b4ba4010443a37223e, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
-  spawnedRecipeMaxInLevel: 0
-  coinsInLevel: 16
+  spawnedRecipeMaxInLevel: 5
+  coinsInLevel: 30
   recipeTimerInLevel: 20
   recipeListSOInLevel: {fileID: 11400000, guid: 6fe67b78a5bfb434fb957e9eae3026cc,
     type: 2}
   levelNumber: 2
   starsCount: -1
-  levelUnlocked: 1
+  isUnlocked: 1
   scene: 6
-  conditionCounterUnlockType: []
+  conditionCounterUnlockType:
+  - counterUnlockType: 0
+    numberOfUnlockedCounters: 1
+  - counterUnlockType: 1
+    numberOfUnlockedCounters: 1
+  - counterUnlockType: 5
+    numberOfUnlockedCounters: 1
+  - counterUnlockType: 3
+    numberOfUnlockedCounters: 1

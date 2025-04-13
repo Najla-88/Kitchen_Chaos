@@ -5,7 +5,9 @@ using UnityEngine;
 public class LevelInfoManager : MonoBehaviour
 {
 
-    private const string UNLOCKED = "unlocked-";
+    [SerializeField] private LevelInfoListSO levelInfoListSO;
+
+    //private const string UNLOCKED = "unlocked-";
     public static LevelInfoManager Instance { get; private set; }
 
     private void Awake()
@@ -13,13 +15,20 @@ public class LevelInfoManager : MonoBehaviour
         Instance = this;
     }
 
-    public void SetUnlockedPrefs(string levelSceneName, int isUnlocked)
+    public void UnlockLevel(string levelSceneName)
     {
-        PlayerPrefs.SetInt(UNLOCKED + levelSceneName, isUnlocked);
-        PlayerPrefs.Save();
+        //PlayerPrefs.SetInt(UNLOCKED + levelSceneName, isUnlocked);
+        //PlayerPrefs.Save();
+        foreach(LevelInfoSO levelInfo in levelInfoListSO.levelInfoSOArray)
+        {
+            if(levelInfo.scene.ToString() == levelSceneName)
+            {
+                levelInfo.isUnlocked = true;
+            }
+        }
     }
-    public int GetUnlockedPrefs(string levelSceneName)
-    {
-        return PlayerPrefs.GetInt(UNLOCKED + levelSceneName);
-    }
+    //public int GetUnlockedPrefs(string levelSceneName)
+    //{
+    //    return PlayerPrefs.GetInt(UNLOCKED + levelSceneName);
+    //}
 }

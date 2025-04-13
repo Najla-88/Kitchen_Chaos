@@ -10,7 +10,6 @@ public class ResetStaticDataManager : MonoBehaviour
         TrashCounter.ResetStaticData();
         CuttingCounter.ResetStaticData();
         SoundManager.ResetStaticData();
-        MenuLevelsManager.ResetStaticData();
     }
 
 }

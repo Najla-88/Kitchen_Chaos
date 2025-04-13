@@ -15,20 +15,17 @@ public class LevelMenuSingleUI : MonoBehaviour
     private void Start()
     {
         GetComponent<Button>().onClick.AddListener(() => {
-            //if(levelInfoSO != null)
-            //{
+            if (levelInfoSO != null)
+            {
                 Loader.Load(levelInfoSO.scene);
-
-            //}
+            }
         });
     }
     public void SetItemData(LevelInfoSO levelInfoSO)
     {
-        Debug.Log(levelInfoSO.name);
-
         this.levelInfoSO = levelInfoSO;
         levelNumber.text = levelInfoSO.levelNumber.ToString();
-        if(!levelInfoSO.levelUnlocked)
+        if(!levelInfoSO.isUnlocked)
         {
             lockImage.gameObject.SetActive(true);
         }

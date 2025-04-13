@@ -14,9 +14,13 @@ public class CounterItemsDataSO : ScriptableObject
     public int lastIndex;
     public int maxCount;
 
+    public event EventHandler OnIncrease;
+    public event EventHandler OnDecrease;
+
     public void IncreaseLastIndex()
     {
         lastIndex +=1 ;
+        OnIncrease?.Invoke(this, EventArgs.Empty);
     }
     public void DecreaseLastIndex()
     {
@@ -24,5 +28,8 @@ public class CounterItemsDataSO : ScriptableObject
         {
             lastIndex -=1 ;
         }
+        OnDecrease?.Invoke(this, EventArgs.Empty);
     }
+
+
 }

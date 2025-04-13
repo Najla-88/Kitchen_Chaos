@@ -8,11 +8,6 @@ public class StoreManager : MonoBehaviour
     [SerializeField] private PlayerMaterialDataListSO playerMaterialDataListSO;
     [SerializeField] private CounterItemsDataListSO counterItemsDataListSO;
 
-    private void Awake()
-    {
-        SaveManager.Instance.Load();
-    }
-
     private void Start()
     {
         if (playerMaterialDataListSO.playerMaterialDataSOArray.Length > 0)
@@ -23,6 +18,24 @@ public class StoreManager : MonoBehaviour
                 playerMaterialDataSO.OnSold += PlayerMaterialDataSO_OnSold;
             }
         }
+        if (counterItemsDataListSO.counterItemsDataSOArray.Length > 0)
+        {
+            foreach (CounterItemsDataSO counterItemsDataSO in counterItemsDataListSO.counterItemsDataSOArray)
+            {
+                counterItemsDataSO.OnIncrease += CounterItemsDataSO_OnIncrease;
+                counterItemsDataSO.OnDecrease += CounterItemsDataSO_OnDecrease;
+            }
+        }
+    }
+
+    private void CounterItemsDataSO_OnDecrease(object sender, EventArgs e)
+    {
+        SaveManager.Instance.Save();
+    }
+
+    private void CounterItemsDataSO_OnIncrease(object sender, EventArgs e)
+    {
+        SaveManager.Instance.Save();
     }
 
     private void PlayerMaterialDataSO_OnSold(object sender, EventArgs e)

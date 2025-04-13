@@ -5477,7 +5477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f394666565cc334992a63b218430a4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelInfoSO: {fileID: 11400000, guid: 111788bd3c9e9b44dbd52b9a77bbdf21, type: 2}
+  levelInfoSO: {fileID: 11400000, guid: c21eb86cc491f5242a28cacccad592ca, type: 2}
   spawnRecipeTimerMax: 10
 --- !u!1001 &652789030
 PrefabInstance:

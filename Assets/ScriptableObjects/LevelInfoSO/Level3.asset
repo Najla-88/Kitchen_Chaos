@@ -19,7 +19,7 @@ MonoBehaviour:
     type: 2}
   levelNumber: 3
   starsCount: -1
-  levelUnlocked: 0
+  isUnlocked: 0
   scene: 7
   conditionCounterUnlockType:
   - counterUnlockType: 0

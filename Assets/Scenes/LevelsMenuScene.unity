@@ -525,7 +525,6 @@ Transform:
   - {fileID: 938130264}
   - {fileID: 1880559055}
   - {fileID: 845150024}
-  - {fileID: 723679322}
   - {fileID: 1952573619}
   - {fileID: 1513833282}
   - {fileID: 1227733074}
@@ -1258,51 +1257,6 @@ Transform:
   - {fileID: 1945255231}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &723679321
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 723679322}
-  - component: {fileID: 723679323}
-  m_Layer: 0
-  m_Name: MenuLevelsManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &723679322
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723679321}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 180.76453, y: -30.82611, z: 10.877808}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 336163873}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &723679323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723679321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60c87e6846206b643bf5cfc24de608ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelInfoListSO: {fileID: 11400000, guid: 2828979c9f7cea44197c53d53371b476, type: 2}
 --- !u!1 &725134586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1665,6 +1619,7 @@ MonoBehaviour:
     type: 2}
   counterItemsDataListSO: {fileID: 11400000, guid: f45a0eb52ee81ea488ea35fd24b2fcb0,
     type: 2}
+  levelInfoListSO: {fileID: 11400000, guid: 2828979c9f7cea44197c53d53371b476, type: 2}
 --- !u!1 &934098516
 GameObject:
   m_ObjectHideFlags: 0
@@ -1963,6 +1918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee7919220f41cc243aceb03ab4d70fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelInfoListSO: {fileID: 11400000, guid: 2828979c9f7cea44197c53d53371b476, type: 2}
 --- !u!1 &1244748851
 GameObject:
   m_ObjectHideFlags: 0
@@ -2536,6 +2492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ac60a32996e38419fd133c506faf7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelInfoListSO: {fileID: 11400000, guid: 2828979c9f7cea44197c53d53371b476, type: 2}
 --- !u!4 &1513833282
 Transform:
   m_ObjectHideFlags: 0

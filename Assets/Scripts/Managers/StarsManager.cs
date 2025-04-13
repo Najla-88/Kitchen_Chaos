@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class StarsManager : MonoBehaviour
 {
+    //private const string LEVEL_STARS_NUMBER = "level-stars-number-";
 
-    //private const string GAME_STARS_NUMBER = "game-stars-number-";
-    private const string LEVEL_STARS_NUMBER = "level-stars-number-";
+    [SerializeField] private LevelInfoListSO levelInfoListSO;
 
     public event EventHandler OnGameStarsNumberChange;
 
@@ -29,6 +29,8 @@ public class StarsManager : MonoBehaviour
 
     private void KitchenGameManager_OnGameOver(object sender, EventArgs e)
     {
+        Debug.Log("gameStarsNumber " + gameStarsNumber);
+        Debug.Log("gameStarsNumber " + gameStarsNumber);
         SetLevlelStarsPrefs(Loader.GetCurrentSceneName(), gameStarsNumber);
     }
 
@@ -56,15 +58,68 @@ public class StarsManager : MonoBehaviour
     }
     public void SetLevlelStarsPrefs(string sceneName, int numberOfStars)
     {
-        int lastStarsNumber = GetLevelStarsPrefs(Loader.GetCurrentSceneName());
-        if(lastStarsNumber < numberOfStars)
+        for(int i = 0; i< levelInfoListSO.levelInfoSOArray.Length; i++)
         {
-            PlayerPrefs.SetInt(LEVEL_STARS_NUMBER + sceneName, numberOfStars);
-            PlayerPrefs.Save();
+            if(levelInfoListSO.levelInfoSOArray[i].scene.ToString() == sceneName)
+            {
+                levelInfoListSO.levelInfoSOArray[i].UpdateStars(numberOfStars);
+
+                // unlock the next level
+                LevelInfoSO nextLevel = levelInfoListSO.levelInfoSOArray[i + 1];
+                if (numberOfStars > 0 && !nextLevel.isUnlocked )
+                {
+                    // if there is any condition check them before unlock
+                    if (nextLevel.conditionCounterUnlockType.Length > 0)
+                    {
+                        bool unlockNextLevel = false;
+                        for (int j = 0; j < nextLevel.conditionCounterUnlockType.Length; j++)
+                        {
+                            int numberOfUnlockedCounters = nextLevel.conditionCounterUnlockType[j].numberOfUnlockedCounters;
+                            int lastIndexOfCounterType = SaveManager.Instance.GetLastIndexOfCounterType(nextLevel.conditionCounterUnlockType[j].counterUnlockType);
+
+                            if (lastIndexOfCounterType >= numberOfUnlockedCounters)
+                            {
+                                if (j == nextLevel.conditionCounterUnlockType.Length - 1)
+                                {
+                                    unlockNextLevel = true;
+                                }
+                            }
+                            else
+                            {
+                                unlockNextLevel = false;
+                                break;
+                            }
+                        }
+                        if (unlockNextLevel)
+                        {
+                            LevelInfoManager.Instance.UnlockLevel(nextLevel.scene.ToString());
+                            nextLevel.isUnlocked = true;
+                        }
+                        else
+                        {
+                            nextLevel.isUnlocked = false;
+                            nextLevel.starsCount = -1;
+                        }
+                    }
+                }
+                //else
+                //{
+                //    LevelInfoManager.Instance.SetUnlockedPrefs(nextLevel.scene.ToString(), 1);
+                //    nextLevel.isUnlocked = true;
+                //}
+                break;
+
+            }
         }
+        //int lastStarsNumber = GetLevelStarsPrefs(Loader.GetCurrentSceneName());
+        //if(lastStarsNumber < numberOfStars)
+        //{
+        //    PlayerPrefs.SetInt(LEVEL_STARS_NUMBER + sceneName, numberOfStars);
+        //    PlayerPrefs.Save();
+        //}
     }
-    public int GetLevelStarsPrefs(string sceneName)
-    {
-        return PlayerPrefs.GetInt(LEVEL_STARS_NUMBER + sceneName, -1);
-    }
+    //public int GetLevelStarsPrefs(string sceneName)
+    //{
+    //    return PlayerPrefs.GetInt(LEVEL_STARS_NUMBER + sceneName, -1);
+    //}
 }

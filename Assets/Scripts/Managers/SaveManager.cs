@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -8,10 +6,9 @@ public class SaveManager : MonoBehaviour
 
     [SerializeField] private PlayerMaterialDataListSO playerMaterialDataListSO;
     [SerializeField] private CounterItemsDataListSO counterItemsDataListSO;
+    [SerializeField] private LevelInfoListSO levelInfoListSO;
 
-    private const string STORE_PREFS = "StorePrefs";
-
-    private List<CountersSaveObject> countersSaveObjectList = new List<CountersSaveObject>();
+    private SaveData _saveData;
 
     private void Awake()
     {
@@ -19,173 +16,156 @@ public class SaveManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        Load();
     }
 
-    [Serializable]
-    private class PlayerCustomSaveObject
+    private void Start()
     {
-        public int usedIndex;
-        public List<int> soldIndex = new List<int>();
+        foreach(LevelInfoSO levelInfo in levelInfoListSO.levelInfoSOArray)
+        {
+            levelInfo.OnStarsUpdated += LevelInfo_OnStarsUpdated;
+        }
     }
 
-    [Serializable]
-    private class CountersSaveObject
+    private void LevelInfo_OnStarsUpdated(object sender, System.EventArgs e)
     {
-        public CountersManager.CounterType counterType;
-        public int lastIndex;
-    }
-
-    [Serializable]
-    private class SaveObject
-    {
-        public PlayerCustomSaveObject playerCustomSaveObject;
-        public List<CountersSaveObject> countersSaveObjectList;
+        Save();
+        Load();
     }
 
     public void Save()
     {
-        SaveObject saveObject = new SaveObject
-        {
-            playerCustomSaveObject = new PlayerCustomSaveObject(),
-            countersSaveObjectList = new List<CountersSaveObject>(),
-        };
+        _saveData = new SaveData();
 
-        // Save player material data
-        for (int i = 0; i < playerMaterialDataListSO.playerMaterialDataSOArray.Length; i++)
-        {
-            if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isSold)
-            {
-                saveObject.playerCustomSaveObject.soldIndex.Add(i);
-                if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed)
-                {
-                    saveObject.playerCustomSaveObject.usedIndex = i;
-                }
-            }
-        }
+        SavePlayerData();
+        SaveCounterData();
+        SaveLevelData();
 
-        // Save counter data
-        foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
-        {
-            saveObject.countersSaveObjectList.Add(new CountersSaveObject
-            {
-                counterType = counterData.counterType,
-                lastIndex = counterData.lastIndex
-            });
-        }
-
-        string json = JsonUtility.ToJson(saveObject);
-        PlayerPrefs.SetString(STORE_PREFS, json);
+        SaveSystem.Save(_saveData);
     }
 
     public void Load()
     {
-        if (PlayerPrefs.HasKey(STORE_PREFS))
-        {
-            string json = PlayerPrefs.GetString(STORE_PREFS);
-            if(json != null)
-            {
+        _saveData = SaveSystem.Load();
 
-                SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
-
-                // Load player material data
-                foreach (int soldIndex in saveObject.playerCustomSaveObject.soldIndex)
-                {
-                    playerMaterialDataListSO.playerMaterialDataSOArray[soldIndex].isSold = true;
-                }
-
-                for(int i = 0; i< playerMaterialDataListSO.playerMaterialDataSOArray.Length; i++)
-                {
-                    if (i == saveObject.playerCustomSaveObject.usedIndex)
-                    {
-                        playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed = true;
-                    }
-                    else
-                    {
-                        playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed = false;
-
-                    }
-                }
-
-
-                // Load counter data
-                countersSaveObjectList = saveObject.countersSaveObjectList;
-                foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
-                {
-                    foreach (var counterSaveObject in saveObject.countersSaveObjectList)
-                    {
-                        if (counterData.counterType == counterSaveObject.counterType)
-                        {
-                            counterData.lastIndex = counterSaveObject.lastIndex;
-                        }
-                    }
-                }
-
-            }
-        }
-        else
+        if (_saveData == null)
         {
             InitializeDefaultValues();
+            return;
         }
+
+        LoadPlayerMaterialData();
+        LoadCountersData();
+        LoadLevelsData();
+    }
+    
+    public int GetLastIndexOfCounterType(CountersManager.CounterType counterType)
+    {
+        foreach (var counterSaveObject in _saveData.countersSaveObjectList)
+        {
+            if (counterSaveObject.CounterType == counterType)
+            {
+                return counterSaveObject.LastIndex;
+            }
+        }
+        return -1;
     }
 
     private void InitializeDefaultValues()
     {
-        // Initialize default values for ScriptableObjects
+        DataInitializer.InitializePlayerMaterialData(playerMaterialDataListSO);
+        DataInitializer.InitializeCounterData(counterItemsDataListSO);
+        DataInitializer.InitializeLevelsData(levelInfoListSO);
 
-        // Player material data
-        // make sure all material is unused and unsold
-        foreach (var playerMaterialData in playerMaterialDataListSO.playerMaterialDataSOArray)
-        {
-            playerMaterialData.isSold = false;
-            playerMaterialData.isUsed = false;
-        }
-        // set the first item as a default material
-        if (playerMaterialDataListSO.playerMaterialDataSOArray.Length > 0)
-        {
-            playerMaterialDataListSO.playerMaterialDataSOArray[0].isSold = true;
-            playerMaterialDataListSO.playerMaterialDataSOArray[0].isUsed = true;
-        }
-
-
-        // Counters
-        foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
-        {
-            if (counterData.counterType == CountersManager.CounterType.Clear)
-            {
-                counterData.lastIndex = 1;
-            }
-            else if (counterData.counterType == CountersManager.CounterType.BreadContainer)
-            {
-                counterData.lastIndex = 1;
-            }
-            else if (counterData.counterType == CountersManager.CounterType.MeatContainer)
-            {
-                counterData.lastIndex = 1;
-            }
-            else if (counterData.counterType == CountersManager.CounterType.Stove)
-            {
-                counterData.lastIndex = 1;
-            }
-            else
-            {
-                counterData.lastIndex = 0;
-            }
-        }
         Save();
-
     }
 
-
-    public int GetLastIndexOfCounterType(CountersManager.CounterType counterType)
+    // Save player material data
+    private void SavePlayerData()
     {
-        foreach (CountersSaveObject countersSaveObject in countersSaveObjectList)
+        for (int i = 0; i < playerMaterialDataListSO.playerMaterialDataSOArray.Length; i++)
         {
-            if(countersSaveObject.counterType == counterType)
+            if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isSold)
             {
-                return countersSaveObject.lastIndex;
+                _saveData.playerCustomSaveObject.SoldIndex.Add(i);
+                if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed)
+                {
+                    _saveData.playerCustomSaveObject.UsedIndex = i;
+                }
             }
         }
-        return -1;
+    }
 
+    // Save counter data
+    private void SaveCounterData()
+    {
+        foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
+        {
+            _saveData.countersSaveObjectList.Add(new SaveData.CountersSaveObject
+            {
+                CounterType = counterData.counterType,
+                LastIndex = counterData.lastIndex
+            });
+        }
+    }
+    
+    // Save level data
+    private void SaveLevelData()
+    {
+        foreach (var levelInfoSO in levelInfoListSO.levelInfoSOArray)
+        {
+            _saveData.levelsSaveData.Add(new SaveData.LevelsSaveData
+            {
+                levelNumber = levelInfoSO.levelNumber,
+                isUnlocked = levelInfoSO.isUnlocked,
+                starsCount = levelInfoSO.starsCount,
+            });
+        }
+    }
+
+    // Load player material data
+    private void LoadPlayerMaterialData()
+    {
+        foreach (int soldIndex in _saveData.playerCustomSaveObject.SoldIndex)
+        {
+            playerMaterialDataListSO.playerMaterialDataSOArray[soldIndex].isSold = true;
+        }
+
+        for (int i = 0; i < playerMaterialDataListSO.playerMaterialDataSOArray.Length; i++)
+        {
+            playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed = i == _saveData.playerCustomSaveObject.UsedIndex;
+        }
+    }
+
+    // Load counter data
+    private void LoadCountersData()
+    {
+        foreach (var counterData in counterItemsDataListSO.counterItemsDataSOArray)
+        {
+            foreach (var counterSaveObject in _saveData.countersSaveObjectList)
+            {
+                if (counterData.counterType == counterSaveObject.CounterType)
+                {
+                    counterData.lastIndex = counterSaveObject.LastIndex;
+                }
+            }
+        }
+    }
+
+    // Load Lavels Data
+    private void LoadLevelsData()
+    {
+        foreach(var levelInfo in levelInfoListSO.levelInfoSOArray)
+        {
+            foreach(var levelSaveObject in _saveData.levelsSaveData)
+            {
+                if(levelInfo.levelNumber == levelSaveObject.levelNumber)
+                {
+                    levelInfo.isUnlocked = levelSaveObject.isUnlocked;
+                    levelInfo.starsCount = levelSaveObject.starsCount;
+                }
+            }
+        }
     }
 }
