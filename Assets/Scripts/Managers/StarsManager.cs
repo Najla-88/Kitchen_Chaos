@@ -29,9 +29,7 @@ public class StarsManager : MonoBehaviour
 
     private void KitchenGameManager_OnGameOver(object sender, EventArgs e)
     {
-        Debug.Log("gameStarsNumber " + gameStarsNumber);
-        Debug.Log("gameStarsNumber " + gameStarsNumber);
-        SetLevlelStarsPrefs(Loader.GetCurrentSceneName(), gameStarsNumber);
+        SetLevlelSOStars(Loader.GetCurrentSceneName(), gameStarsNumber);
     }
 
     private void CoinsManager_OnGameCoinsAmountChange(object sender, EventArgs e)
@@ -56,7 +54,7 @@ public class StarsManager : MonoBehaviour
     {
         return gameStarsNumber;
     }
-    public void SetLevlelStarsPrefs(string sceneName, int numberOfStars)
+    public void SetLevlelSOStars(string sceneName, int numberOfStars)
     {
         for(int i = 0; i< levelInfoListSO.levelInfoSOArray.Length; i++)
         {

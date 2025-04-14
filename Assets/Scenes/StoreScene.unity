@@ -3373,6 +3373,7 @@ MonoBehaviour:
     type: 2}
   counterItemsDataListSO: {fileID: 11400000, guid: f45a0eb52ee81ea488ea35fd24b2fcb0,
     type: 2}
+  levelInfoListSO: {fileID: 11400000, guid: 2828979c9f7cea44197c53d53371b476, type: 2}
 --- !u!4 &1216108649
 Transform:
   m_ObjectHideFlags: 0
@@ -3991,7 +3992,7 @@ MonoBehaviour:
   useButton: {fileID: 1641715481}
   usedButton: {fileID: 175287022}
   buyText: {fileID: 955864714}
-  playerCharacterCustomized: {fileID: 1626894498752639147, guid: 157bbb872ad25eb44a1e6cdc2503fcc0,
+  playerCharacterCustomized: {fileID: 8535381548192145687, guid: 157bbb872ad25eb44a1e6cdc2503fcc0,
     type: 3}
 --- !u!1 &1641715479
 GameObject:

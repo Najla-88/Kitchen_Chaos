@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -16,32 +17,69 @@ public class SaveManager : MonoBehaviour
         {
             Instance = this;
         }
-
-        Load();
     }
 
     private void Start()
     {
-        foreach(LevelInfoSO levelInfo in levelInfoListSO.levelInfoSOArray)
-        {
-            levelInfo.OnStarsUpdated += LevelInfo_OnStarsUpdated;
-        }
-    }
+        //if (playerMaterialDataListSO.playerMaterialDataSOArray.Length > 0)
+        //{
+        //    foreach (PlayerMaterialDataSO playerMaterialDataSO in playerMaterialDataListSO.playerMaterialDataSOArray)
+        //    {
+        //        playerMaterialDataSO.OnUsed += PlayerMaterialDataSO_OnUsed;
+        //        playerMaterialDataSO.OnSold += PlayerMaterialDataSO_OnSold;
+        //    }
+        //}
+        //if (counterItemsDataListSO.counterItemsDataSOArray.Length > 0)
+        //{
+        //    foreach (CounterItemsDataSO counterItemsDataSO in counterItemsDataListSO.counterItemsDataSOArray)
+        //    {
+        //        counterItemsDataSO.OnIncrease += CounterItemsDataSO_OnIncrease;
+        //        counterItemsDataSO.OnDecrease += CounterItemsDataSO_OnDecrease;
+        //    }
+        //}
 
-    private void LevelInfo_OnStarsUpdated(object sender, System.EventArgs e)
-    {
-        Save();
+        //foreach (LevelInfoSO levelInfo in levelInfoListSO.levelInfoSOArray)
+        //{
+        //    levelInfo.OnStarsUpdated += LevelInfo_OnStarsUpdated;
+        //}
         Load();
     }
+    //private void PlayerMaterialDataSO_OnUsed(object sender, EventArgs e)
+    //{
+    //    Save(sender.ToString());
+    //}
 
-    public void Save()
+    //private void PlayerMaterialDataSO_OnSold(object sender, EventArgs e)
+    //{
+    //    Save();
+    //}
+
+
+    //private void CounterItemsDataSO_OnDecrease(object sender, EventArgs e)
+    //{
+    //    Save();
+    //}
+
+    //private void CounterItemsDataSO_OnIncrease(object sender, EventArgs e)
+    //{
+    //    Save();
+    //}
+
+
+    //private void LevelInfo_OnStarsUpdated(object sender, EventArgs e)
+    //{
+    //    Save();
+    //    Load();
+    //}
+   
+    
+    public void Save(string materialName = "")
     {
         _saveData = new SaveData();
 
-        SavePlayerData();
+        SavePlayerData(materialName);
         SaveCounterData();
         SaveLevelData();
-
         SaveSystem.Save(_saveData);
     }
 
@@ -82,14 +120,14 @@ public class SaveManager : MonoBehaviour
     }
 
     // Save player material data
-    private void SavePlayerData()
+    private void SavePlayerData(string materialName)
     {
         for (int i = 0; i < playerMaterialDataListSO.playerMaterialDataSOArray.Length; i++)
         {
             if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isSold)
             {
                 _saveData.playerCustomSaveObject.SoldIndex.Add(i);
-                if (playerMaterialDataListSO.playerMaterialDataSOArray[i].isUsed)
+                if (materialName != "" && playerMaterialDataListSO.playerMaterialDataSOArray[i].ToString() == materialName)
                 {
                     _saveData.playerCustomSaveObject.UsedIndex = i;
                 }
@@ -168,4 +206,31 @@ public class SaveManager : MonoBehaviour
             }
         }
     }
+
+    //private void OnDestroy()
+    //{
+    //    if (playerMaterialDataListSO != null && playerMaterialDataListSO.playerMaterialDataSOArray != null)
+    //    {
+    //        foreach (PlayerMaterialDataSO playerMaterialDataSO in playerMaterialDataListSO.playerMaterialDataSOArray)
+    //        {
+    //            playerMaterialDataSO.OnUsed -= PlayerMaterialDataSO_OnUsed;
+    //            playerMaterialDataSO.OnSold -= PlayerMaterialDataSO_OnSold;
+    //        }
+    //    }
+    //    if (counterItemsDataListSO != null && counterItemsDataListSO.counterItemsDataSOArray != null)
+    //    {
+    //        foreach (CounterItemsDataSO counterItemsDataSO in counterItemsDataListSO.counterItemsDataSOArray)
+    //        {
+    //            counterItemsDataSO.OnIncrease -= CounterItemsDataSO_OnIncrease;
+    //            counterItemsDataSO.OnDecrease -= CounterItemsDataSO_OnDecrease;
+    //        }
+    //    }
+    //    if (levelInfoListSO != null && levelInfoListSO.levelInfoSOArray != null)
+    //    {
+    //        foreach (LevelInfoSO levelInfo in levelInfoListSO.levelInfoSOArray)
+    //        {
+    //            levelInfo.OnStarsUpdated -= LevelInfo_OnStarsUpdated;
+    //        }
+    //    }
+    //}
 }

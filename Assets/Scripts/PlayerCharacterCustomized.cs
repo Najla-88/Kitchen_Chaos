@@ -5,13 +5,27 @@ using UnityEngine;
 
 public class PlayerCharacterCustomized : MonoBehaviour
 {
-    [SerializeField] MaterialData materialData;
+    [SerializeField] private PlayerMaterialDataListSO playerMaterialDataList;
+    [SerializeField] private MaterialData materialData;
     
+
     [Serializable]
     public class MaterialData
     {
         public MeshRenderer[] meshRendererArray;
         public PlayerMaterialDataListSO playerMaterialDataListSO;
+    }
+
+    private void Start()
+    {
+        for(int i = 0; i < playerMaterialDataList.playerMaterialDataSOArray.Length; i++)
+        {
+            if(playerMaterialDataList.playerMaterialDataSOArray[i].isUsed)
+            {
+                ChangeMaterial(i);
+                break;
+            }
+        }
     }
 
     public void ChangeMaterial(int newIndex)
