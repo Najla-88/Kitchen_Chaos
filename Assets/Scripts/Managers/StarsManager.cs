@@ -19,7 +19,7 @@ public class StarsManager : MonoBehaviour
         Instance = this;
     }
 
-    private readonly float[] starsLimitArray = {0.79f, 0.9f, 1f};
+    private readonly float[] starsLimitArray = {0.4f, 0.8f, 1f};
 
     private void Start()
     {
