@@ -23,7 +23,20 @@ public class ContainerCounter : BaseCounter
 
                 OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
             }
+            else if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+            {
+                // Player is carrying a Plate
+
+                KitchenObject breadKitchenObject =  KitchenObject.SpawnKitchenObject(kitchenObjectSO);
+                if (plateKitchenObject.TryAddIngredient(breadKitchenObject.GetKitchenObjectSO()))
+                {
+                    Destroy(breadKitchenObject.gameObject);
+                }
+                else
+                {
+                    Destroy(breadKitchenObject.gameObject);
+                }
+            }
         }
     }
-
 }
