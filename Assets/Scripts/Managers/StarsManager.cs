@@ -60,53 +60,52 @@ public class StarsManager : MonoBehaviour
         {
             if(levelInfoListSO.levelInfoSOArray[i].scene.ToString() == sceneName)
             {
-                levelInfoListSO.levelInfoSOArray[i].UpdateStars(numberOfStars);
-
-                // unlock the next level
-                LevelInfoSO nextLevel = levelInfoListSO.levelInfoSOArray[i + 1];
-                if (numberOfStars > 0 && !nextLevel.isUnlocked )
+                if (levelInfoListSO.levelInfoSOArray[i].starsCount < numberOfStars)
                 {
-                    // if there is any condition check them before unlock
-                    if (nextLevel.conditionCounterUnlockType.Length > 0)
-                    {
-                        bool unlockNextLevel = false;
-                        for (int j = 0; j < nextLevel.conditionCounterUnlockType.Length; j++)
-                        {
-                            int numberOfUnlockedCounters = nextLevel.conditionCounterUnlockType[j].numberOfUnlockedCounters;
-                            int lastIndexOfCounterType = SaveManager.Instance.GetLastIndexOfCounterType(nextLevel.conditionCounterUnlockType[j].counterUnlockType);
+                    levelInfoListSO.levelInfoSOArray[i].UpdateStars(numberOfStars);
 
-                            if (lastIndexOfCounterType >= numberOfUnlockedCounters)
+                    // unlock the next level
+                    LevelInfoSO nextLevel = levelInfoListSO.levelInfoSOArray[i + 1];
+
+                    if (numberOfStars > 0 && !nextLevel.isUnlocked )
+                    {
+                        // if there is any condition check them before unlock
+                        if (nextLevel.conditionCounterUnlockType.Length > 0)
+                        {
+                            bool unlockNextLevel = false;
+                            for (int j = 0; j < nextLevel.conditionCounterUnlockType.Length; j++)
                             {
-                                if (j == nextLevel.conditionCounterUnlockType.Length - 1)
+                                int numberOfUnlockedCounters = nextLevel.conditionCounterUnlockType[j].numberOfUnlockedCounters;
+                                int lastIndexOfCounterType = SaveManager.Instance.GetLastIndexOfCounterType(nextLevel.conditionCounterUnlockType[j].counterUnlockType);
+
+                                if (lastIndexOfCounterType >= numberOfUnlockedCounters)
                                 {
-                                    unlockNextLevel = true;
+                                    if (j == nextLevel.conditionCounterUnlockType.Length - 1)
+                                    {
+                                        unlockNextLevel = true;
+                                    }
                                 }
+                                else
+                                {
+                                    unlockNextLevel = false;
+                                    break;
+                                }
+                            }
+                            if (unlockNextLevel)
+                            {
+                                LevelInfoManager.Instance.UnlockLevel(nextLevel.scene.ToString());
+                                nextLevel.isUnlocked = true;
                             }
                             else
                             {
-                                unlockNextLevel = false;
-                                break;
+                                nextLevel.isUnlocked = false;
+                                nextLevel.starsCount = -1;
                             }
-                        }
-                        if (unlockNextLevel)
-                        {
-                            LevelInfoManager.Instance.UnlockLevel(nextLevel.scene.ToString());
-                            nextLevel.isUnlocked = true;
-                        }
-                        else
-                        {
-                            nextLevel.isUnlocked = false;
-                            nextLevel.starsCount = -1;
                         }
                     }
                 }
-                //else
-                //{
-                //    LevelInfoManager.Instance.SetUnlockedPrefs(nextLevel.scene.ToString(), 1);
-                //    nextLevel.isUnlocked = true;
-                //}
-                break;
 
+                break;
             }
         }
         //int lastStarsNumber = GetLevelStarsPrefs(Loader.GetCurrentSceneName());

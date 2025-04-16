@@ -34,7 +34,6 @@ public static class DataInitializer
 
     public static void InitializeLevelsData(LevelInfoListSO levelInfoListSO)
     {
-        Debug.Log("hi");
         foreach(LevelInfoSO levelInfo in levelInfoListSO.levelInfoSOArray)
         {
             if(levelInfo.levelNumber == 1)
