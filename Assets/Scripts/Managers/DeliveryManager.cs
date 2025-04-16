@@ -7,65 +7,52 @@ public class DeliveryManager : MonoBehaviour
 {
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
-    public event EventHandler<OnRecipeSuccessChangedEventArgs> OnRecipeSuccess;
+    public event EventHandler <OnRecipeSuccessChangedEventArgs> OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
     public event EventHandler OnRecipeUpdated;
     public event EventHandler OnSpawnedRecipeMaxUpdated;
-
-    public static DeliveryManager Instance { get; private set; }
-
-
     public class OnRecipeSuccessChangedEventArgs : EventArgs
     {
         public int coins;
     }
 
-
-    //[SerializeField] private RecipeListSO recipeListSO;
+    public static DeliveryManager Instance { get; private set; }
 
     [SerializeField] private LevelInfoSO levelInfoSO;
-    [SerializeField] private float spawnRecipeTimerMax;
 
-    //private List<RecipeSO> waitingRecipesSOList;
-    
+
+    // Get From LevelInfoSO
+    private RecipeListSO recipeListSO;
+    private int spawnedRecipeMax;
+
+    // Dont need edit
     private List<WaitingRecipe> waitingRecipesList;
+    
+    private int sadRecipeTime = 7;
+    private int angryRecipeTime = 4;
 
-    private float spawnRecipeTimer;
-    //private float spawnRecipeTimerMax = 4f;
-    private int waitingRecipesMax = 3;
     private int successfulRecipesAmount;
     private int lostRecipesAmount;
-    private int spawnedRecipeMax;
-    private int goalCoins;
-    private float recipeTimer;
-    private RecipeListSO recipeListSO;
+    
+    // for countdown
+    private int waitingRecipesMax = 3;
+    private float spawnRecipeTimerMax = 10f;
+    private float spawnRecipeTimer;
+    private float recipeTimer = 20;
 
-
-    private int sadRecipeTime;
-    private int angryRecipeTime;
 
 
     private void Awake()
     {
         Instance = this;
 
-        //waitingRecipesSOList = new List<RecipeSO>();
         waitingRecipesList = new List<WaitingRecipe>();
     }
 
     private void Start()
     {
-
-        spawnedRecipeMax = levelInfoSO.spawnedRecipeMaxInLevel;
-
-        goalCoins = levelInfoSO.coinsInLevel;
-        recipeTimer = levelInfoSO.recipeTimerInLevel;
-
         recipeListSO = levelInfoSO.recipeListSOInLevel;
-
-        sadRecipeTime = 7;
-        angryRecipeTime = 4;
-
+        spawnedRecipeMax = levelInfoSO.GetSpawnedRecipeMaxInLevel();
     }
 
     private void Update()
@@ -180,12 +167,6 @@ public class DeliveryManager : MonoBehaviour
 
     public List<WaitingRecipe> GetWaitingRecipeList()
     {
-        //List<RecipeSO> waitingRecipesSOList = new List<RecipeSO>();
-
-        //foreach (WaitingRecipe waitingRecipe in waitingRecipesList)
-        //{
-        //    waitingRecipesSOList.Add(waitingRecipe.recipeSO);
-        //}
         return waitingRecipesList;
     }
 
@@ -213,6 +194,9 @@ public class DeliveryManager : MonoBehaviour
 
     public int GetGoalCoins()
     {
+        int lessRecipe = levelInfoSO.GetLessExpensiveRecipie();
+        int goalCoins = levelInfoSO.GetSpawnedRecipeMaxInLevel() * lessRecipe;
+        goalCoins -= lessRecipe / 2;
         return goalCoins;
     }
 

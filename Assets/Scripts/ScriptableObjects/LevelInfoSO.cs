@@ -6,18 +6,17 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class LevelInfoSO : ScriptableObject
 {
-    //public int sadRecipeTimeInLevel;
-    //public int angryRecipeTimeInLevel;
-
-    public int spawnedRecipeMaxInLevel;
-    public int coinsInLevel;
-    public float recipeTimerInLevel;
-    public RecipeListSO recipeListSOInLevel;
-
     public int levelNumber;
-    public int starsCount=-1;
-    public bool isUnlocked;
     public Loader.Scene scene;
+    public bool isUnlocked;
+    public int starsCount=-1;
+
+    public RecipeListSO recipeListSOInLevel;
+    public int spawnedRecipeMaxInLevel;
+
+    // calculate them
+    //public int coinsInLevel;
+    //public float recipeTimerInLevel;
 
     public ConditionCounterUnlockType[] conditionCounterUnlockType;
 
@@ -27,6 +26,22 @@ public class LevelInfoSO : ScriptableObject
     {
         this.starsCount = starsCount;
         OnStarsUpdated?.Invoke(this, new EventArgs());
+    }
+
+    public int GetLessExpensiveRecipie()
+    {
+        int lessExpensiveRecipie = recipeListSOInLevel.recipeSOList[0].CalculateTotalCost();
+        for (int i=0; i< recipeListSOInLevel.recipeSOList.Count; i++)
+        {
+            int recipieCost = recipeListSOInLevel.recipeSOList[i].CalculateTotalCost();
+            lessExpensiveRecipie = lessExpensiveRecipie > recipieCost ? recipieCost : lessExpensiveRecipie;
+        }
+        return lessExpensiveRecipie;
+    }
+
+    public int GetSpawnedRecipeMaxInLevel()
+    {
+        return spawnedRecipeMaxInLevel;
     }
 }
 

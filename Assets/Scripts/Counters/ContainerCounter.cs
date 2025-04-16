@@ -30,6 +30,7 @@ public class ContainerCounter : BaseCounter
                 KitchenObject breadKitchenObject =  KitchenObject.SpawnKitchenObject(kitchenObjectSO);
                 if (plateKitchenObject.TryAddIngredient(breadKitchenObject.GetKitchenObjectSO()))
                 {
+                    OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
                     Destroy(breadKitchenObject.gameObject);
                 }
                 else
