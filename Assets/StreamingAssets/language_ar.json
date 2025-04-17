@@ -1,0 +1,31 @@
+{
+    "items": [{
+            "key": "play",
+            "value": "إبدأ اللعب"
+        },
+        {
+            "key": "store",
+            "value": "المتجر"
+        },
+        {
+            "key": "settings",
+            "value": "الإعدادات"
+        },
+        {
+            "key": "quit",
+            "value": "خروج"
+        },
+        {
+            "key": "soundEffects",
+            "value": "المؤثرات الصوتية"
+        },
+        {
+            "key": "music",
+            "value": "الموسيقى"
+        },
+        {
+            "key": "close",
+            "value": "إغلاق"
+        }
+    ]
+}

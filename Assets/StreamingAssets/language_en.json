@@ -1,0 +1,31 @@
+{
+    "items": [{
+            "key": "play",
+            "value": "Play"
+        },
+        {
+            "key": "store",
+            "value": "Store"
+        },
+        {
+            "key": "settings",
+            "value": "Settings"
+        },
+        {
+            "key": "quit",
+            "value": "Quit"
+        },
+        {
+            "key": "soundEffects",
+            "value": "Sound Effects"
+        },
+        {
+            "key": "music",
+            "value": "Music"
+        },
+        {
+            "key": "close",
+            "value": "Close"
+        }
+    ]
+}
